@@ -14,45 +14,57 @@
   <body>
     <div id="container"></div>
     <script type="text/babel">
+
       var Heading = React.createClass({
+      
         render: function() {
           return <th>{this.props.heading}</th>;
         }
-        });
+      });
 
       var Headings = React.createClass({
-      render: function() {
-        var headings = this.props.headings.map(function(name) {
-          return <Heading heading = {name}/>;
-        });
-        return <thead><tr>{headings}</tr></thead>;
-        }
+
+        render: function() {
+
+          var headings = this.props.headings.map(function(name, index) {
+            return <Heading key={index} heading = {name}/>;
+          });
+          return <thead><tr>{headings}</tr></thead>;
+          }
       });
 
       var Row = React.createClass({
-      render: function() {
-        return <tr>
-          <td>{this.props.changeSet.when}</td>
-          <td>{this.props.changeSet.who}</td>
-          <td>{this.props.changeSet.description}</td>
-        </tr>;
-        }
+        render: function() {
+          return <tr>
+            <td>{this.props.changeSet.when}</td>
+            <td>{this.props.changeSet.who}</td>
+            <td>{this.props.changeSet.description}</td>
+          </tr>;
+          }
       });
 
       var Rows = React.createClass({
         render: function() {
-          var rows = this.props.rowChangeSets.map(function(changeSet) {
-            return(<Row changeSet = {changeSet}/>);
+          var rows = this.props.ChangeSets.map(function(changeSet, index) {
+            return(<Row key={index} changeSet = {changeSet}/>);
           });
           return <tbody>{rows}</tbody>;
         }
       });
-
+      
       var App = React.createClass({
-        render: function() {
-          return <table className = 'table'>
+        render: function(){
+          return(<RecentChangesTable>
             <Headings headings = {this.props.headings} />
-            <Rows rowChangeSets = {this.props.changeSets} />
+            <Rows ChangeSets = {this.props.changeSets} />
+          </RecentChangesTable>);
+        }
+      });
+
+      var RecentChangesTable = React.createClass({
+        render: function() {
+          return <table>
+            {this.props.children}
           </table>;
         }
       });
@@ -67,9 +79,9 @@
                   "description": "Added fist chapter"
                   }];
       var headings = ['When', 'Who', 'Description'];
-
+      var props = { headings: headings, changeSets: data };
       ReactDOM.render(
-        <App  headings = {headings} changeSets = {data} />,
+        <App { ...props } />,
         document.getElementById('container')
       );
     </script>
